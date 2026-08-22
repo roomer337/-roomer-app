@@ -28,6 +28,12 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Android SDK 설치+라이선스 자동동의(흔한 빌드실패 원인 사전방지)
+        uses: android-actions/setup-android@v3
+
+      - name: Gradle 빌드 속도향상용 캐시
+        uses: gradle/actions/setup-gradle@v4
+
       - name: 패키지 설치
         run: npm install
 
@@ -44,9 +50,9 @@ jobs:
       - name: Gradle 실행권한 부여
         run: chmod +x android/gradlew
 
-      - name: APK 빌드(디버그용 — 테스트 설치 가능)
+      - name: APK 빌드(디버그용 — 테스트 설치 가능, 실패시 상세로그 출력)
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug --stacktrace --info
 
       - name: 빌드된 APK 업로드(다운로드 가능하게)
         uses: actions/upload-artifact@v4
