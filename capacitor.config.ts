@@ -14,7 +14,7 @@ const config: CapacitorConfig = {
   appName: '루머 ROOMER',
   webDir: 'www',
   server: {
-    url: `http://${DEV_SERVER_IP}:4000/app`,
+    url: `http://${DEV_SERVER_IP}:4000/app/`,
     cleartext: true // http(https 아님) 통신을 허용(개발단계 전용, 실배포 시 https로 전환 필요)
   }
 };
