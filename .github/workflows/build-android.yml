@@ -5,10 +5,10 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
     inputs:
-      server_ip:
-        description: 'PC의 로컬 네트워크 IP(server.js 실행시 콘솔에 뜨는 그 IP, 예: 192.168.0.5)'
+      server_url:
+        description: '서버 전체 주소(로컬: http://192.168.x.x:4000/app/ 또는 실배포: https://xxx.onrender.com/app/)'
         required: true
-        default: '192.168.0.2'
+        default: 'https://roomer-backend.onrender.com/app/'
 
 jobs:
   build-android:
@@ -32,12 +32,12 @@ jobs:
       - name: 패키지 설치
         run: npm install
 
-      - name: 서버 IP 자동반영(입력값이 있으면 설정파일에 덮어씀)
-        if: ${{ github.event.inputs.server_ip != '' }}
+      - name: 서버 주소 자동반영(입력값이 있으면 설정파일에 덮어씀)
+        if: ${{ github.event.inputs.server_url != '' }}
         run: |
-          sed -i "s|const DEV_SERVER_IP = '.*';|const DEV_SERVER_IP = '${{ github.event.inputs.server_ip }}';|" capacitor.config.ts
-          echo "적용된 서버 IP: ${{ github.event.inputs.server_ip }}"
-          grep DEV_SERVER_IP capacitor.config.ts
+          sed -i "s|const SERVER_BASE_URL = '.*';|const SERVER_BASE_URL = '${{ github.event.inputs.server_url }}';|" capacitor.config.ts
+          echo "적용된 서버 주소: ${{ github.event.inputs.server_url }}"
+          grep SERVER_BASE_URL capacitor.config.ts
 
       - name: Capacitor 동기화(웹 자산 → 안드로이드 프로젝트)
         run: npx cap sync android
